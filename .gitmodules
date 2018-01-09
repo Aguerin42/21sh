@@ -7,3 +7,6 @@
 [submodule "project/libft"]
 	path = project/libft
 	url = git@github.com:Aguerin42/libft.git
+[submodule "project/environment"]
+	path = project/environment
+	url = git@github.com:Aguerin42/environment.git

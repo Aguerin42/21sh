@@ -13,8 +13,8 @@ ifeq ($(OS), Linux)
 else
 	CFLAGSUP = -Wno-sign-compare # -g -fsanitize=address
 endif
-CPPFLAGS = -I $(INC_PATH) -I $(LIB_INC) -I $(LINE_INC)
-CLIB = -L $(LINE) -llinput -L $(LIBFT) -lft -ltermcap
+CPPFLAGS = -I $(INC_PATH) -I $(LIB_INC) -I $(LINE_INC) -I $(ENV_INC)
+CLIB = -L $(LINE) -llinput -L $(LIBFT) -lft -L $(ENVIRON) -lenv -ltermcap
 
 # Fichiers d'en-tête
 INC_PATH = project/21sh/includes/
@@ -36,10 +36,14 @@ LINE = project/line_input/
 LINE_INC = $(LINE)includes/
 LIBLINE = $(LINE)liblinput.a
 
+ENVIRON = project/environment/
+ENV_INC = $(ENVIRON)includes/
+LIBENV = $(ENVIRON)libenv.a
+
 # Règles de compilation
 all: lib $(NAME)
 
-$(NAME): Makefile $(LIB) $(LIBLINE) $(OBJ)
+$(NAME): Makefile $(LIB) $(LIBLINE) $(LIBENV) $(OBJ)
 	@echo "$(CYAN)Compilation de $(NAME)$(RESET)"
 	@$(CC) $(CFLAGS) $(CPPFLAGS) $(CFLAGSUP) $(OBJ) $(CLIB) -o $(NAME)
 
@@ -49,14 +53,17 @@ lib:
 	@echo "$(VERT)Compilation...$(RESET)"
 	@make -C $(LIBFT) all
 	@make -C $(LINE) LIBFT_INC=../libft/includes all
+	@make -C $(ENVIRON) LIBFT_INC=../libft/includes all
 
 clean: cleanproj
 	@make -C $(LIBFT) clean
 	@make -C $(LINE) clean
+	@make -C $(ENVIRON) clean
 
 fclean: fcleanproj
 	@make -C $(LIBFT) fclean
 	@make -C $(LINE) fclean
+	@make -C $(ENVIRON) fclean
 
 re: fclean all
 
@@ -73,15 +80,17 @@ doxygen:
 	@echo "$(CYAN)Génération de la documentation de $(PROJET)$(RESET)"
 	@mkdir -p Docs
 	@doxygen $(PROJET).doxyconf > Docs/$(PROJET).log
-	#@echo "Pas de fichier de documentation pour $(PROJET)"
-	@make -C $(LIBFT) doxygen
-	@make -C $(LINE) doxygen
+#	@echo "$(JAUNE)Pas de fichier de documentation pour $(PROJET)$(RESET)"
+	@make -C $(LIBFT) doxygen $(DOXYGEN)
+	@make -C $(LINE) doxygen $(DOXYGEN)
+	@make -C $(ENVIRON) doxygen $(DOXYGEN)
 
 cleandoxy:
 	@echo "Suppression de la documentation de $(PROJET)"
 	@rm -rf Docs/
 	@make -C $(LIBFT) cleandoxy
 	@make -C $(LINE) cleandoxy
+	@make -C $(ENVIRON) cleandoxy
 
 fcleanall: cleandoxy fclean
 
@@ -96,5 +105,8 @@ NOIR  = \033[30m
 ROUGE = \033[31m
 ROUGEC = \033[1;31m
 VERT  = \033[32m
+
+# Variables
+DOXYGEN = doxygen
 
 .PHONY: all lib clean fclean re doxygen cleandoxy
