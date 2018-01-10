@@ -10,3 +10,12 @@
 [submodule "project/environment"]
 	path = project/environment
 	url = git@github.com:Aguerin42/environment.git
+[submodule "modules/environment"]
+	path = modules/environment
+	url = git@github.com:Aguerin42/environment.git
+[submodule "modules/libft"]
+	path = modules/libft
+	url = git@github.com:Aguerin42/libft.git
+[submodule "modules/line_input"]
+	path = modules/line_input
+	url = git@github.com:Aguerin42/line_input.git

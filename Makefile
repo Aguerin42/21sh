@@ -1,6 +1,6 @@
 # Nom
 NAME = 21sh
-PROJET = 21sh
+PROJECT = 21sh
 
 # Détection de l'OS
 OS = $(shell uname -s)
@@ -17,26 +17,26 @@ CPPFLAGS = -I $(INC_PATH) -I $(LIB_INC) -I $(LINE_INC) -I $(ENV_INC)
 CLIB = -L $(LINE) -llinput -L $(LIBFT) -lft -L $(ENVIRON) -lenv -ltermcap
 
 # Fichiers d'en-tête
-INC_PATH = project/21sh/includes/
+INC_PATH = includes/
 INC_FILE = twenty_onesh.h
 INC = $(addprefix $(INC_PATH), $(INC_FILE))
 
 # Fichiers sources
-SRC_PATH = project/21sh/src/
-SRC_FILE = main.c set_environ.c
+SRC_PATH = src/
+SRC_FILE = main.c 
 SRC = $(addprefix $(SRC_PATH), $(SRC_FILE))
 OBJ = $(SRC:.c=.o)
 
 # Fichiers des bibliothèques
-LIBFT = project/libft/
+LIBFT = modules/libft/
 LIB_INC = $(LIBFT)includes/
 LIB = $(LIBFT)libft.a
 
-LINE = project/line_input/
+LINE = modules/line_input/
 LINE_INC = $(LINE)includes/
 LIBLINE = $(LINE)liblinput.a
 
-ENVIRON = project/environment/
+ENVIRON = modules/environment/
 ENV_INC = $(ENVIRON)includes/
 LIBENV = $(ENVIRON)libenv.a
 
@@ -75,19 +75,29 @@ fcleanproj: cleanproj
 	@echo "$(ROUGEC)Suppression de l'exécutable $(NAME)$(RESET)"
 	@rm -f $(NAME)
 
+# Règles pour la norme
+norme: cleanproj
+	@echo "$(MAGEN)Norme pour $(PROJECT)$(RESET)"
+	@norminette includes/ src/
+
+normeall: norme
+	@make -C $(LIBFT) norme
+	@make -C $(LINE) norme
+	@make -C $(ENVIRON) norme
+
 # Règles pour la documentation
 doxygen:
-	@echo "$(CYAN)Génération de la documentation de $(PROJET)$(RESET)"
-	@mkdir -p Docs
-	@$(DOXYGEN) $(PROJET).doxyconf > Docs/$(PROJET).log
-#	@echo "$(JAUNE)Pas de fichier de documentation pour $(PROJET)$(RESET)"
+	@echo "$(CYAN)Génération de la documentation de $(PROJECT)$(RESET)"
+	@$(DOXYGEN) documentation/$(PROJECT).doxyconf > documentation/$(PROJECT).log
+#	@echo "$(JAUNE)Pas de fichier de documentation pour $(PROJECT)$(RESET)"
 	@make -C $(LIBFT) doxygen $(DOXYGEN)
 	@make -C $(LINE) doxygen $(DOXYGEN)
 	@make -C $(ENVIRON) doxygen $(DOXYGEN)
 
 cleandoxy:
-	@echo "Suppression de la documentation de $(PROJET)"
-	@rm -rf Docs/
+	@echo "Suppression de la documentation de $(PROJECT)"
+	@rm -rf documentation/html
+	@rm -rf documentation/$(PROJECT).log
 	@make -C $(LIBFT) cleandoxy
 	@make -C $(LINE) cleandoxy
 	@make -C $(ENVIRON) cleandoxy
