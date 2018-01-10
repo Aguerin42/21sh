@@ -10,25 +10,21 @@
 **	Entrée du programme
 */
 
-int	main(void)
+int main(void)
 {
 	extern char	**environ;
 	char		**env;
 	char		*line;
 
-	line = NULL;
 	env = dupenv((const char**)environ, ft_strlendouble(environ));
-	while (!ft_strequ(line, "exit"))
+	line = NULL;
+	while (!ft_strequ("exit", line))
 	{
 		line ? ft_strdel(&line) : NULL;
-		line = line_input("$>", NULL);
+		line = line_input("$>", NULL);	
 		ft_putendl("");
 	}
 	line ? ft_strdel(&line) : NULL;
 	env ? ft_strdeldouble(&env) : NULL;
-	if (!env)
-		ft_putendl("okay");
-	while (1)
-		;
 	return (0);
 }
