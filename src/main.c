@@ -21,7 +21,9 @@ int main(void)
 	while (!ft_strequ("exit", line))
 	{
 		line ? ft_strdel(&line) : NULL;
+		signal(SIGINT, NULL);
 		line = line_input("$>", NULL);	
+		signal(SIGINT, NULL);
 		ft_putendl("");
 	}
 	line ? ft_strdel(&line) : NULL;
